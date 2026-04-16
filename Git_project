@@ -1,0 +1,2306 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyFlow - Academic Platform</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Navigation */
+    nav {
+      background: #000;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #333;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #ccc;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    nav a:hover {
+      color: #fff;
+    }
+
+    /* Settings Icon */
+    .settings-icon {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #ccc;
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+
+    .settings-icon:hover {
+      color: #fff;
+    }
+
+    /* Settings Modal */
+    .settings-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.3s;
+    }
+
+    .settings-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 0;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      animation: slideDown 0.3s;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      background: #000;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
+
+    .modal-header h2 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .close-btn {
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: color 0.2s;
+    }
+
+    .close-btn:hover {
+      color: #ccc;
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .modal-settings-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .modal-settings-container {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        width: 95%;
+        max-height: 95vh;
+      }
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: #000;
+      color: white;
+      padding: 5rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #999;
+      margin-bottom: 1rem;
+      font-weight: 400;
+    }
+
+    /* Main Content */
+    main {
+      padding: 3rem 0;
+    }
+
+    .section {
+      background: #fff;
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+      border: 1px solid #e0e0e0;
+    }
+
+    .section h2 {
+      font-size: 1.8rem;
+      color: #000;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #000;
+      padding-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* Study Tips Grid */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .tip-card {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+      transition: all 0.3s;
+      border-left: 3px solid #000;
+    }
+
+    .tip-card:hover {
+      background: #fff;
+      border-left: 3px solid #000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .tip-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .tip-card p {
+      font-size: 0.85rem;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Goals Section */
+    .goals-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .goals-form {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+    }
+
+    .goals-form h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .goals-form input,
+    .goals-form select {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #ccc;
+      font-size: 0.9rem;
+    }
+
+    .goals-form input:focus,
+    .goals-form select:focus {
+      outline: none;
+      border-color: #000;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+    }
+
+    .btn {
+      background: #000;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn:hover {
+      background: #333;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: #000;
+      border: 1px solid #000;
+    }
+
+    .btn-secondary:hover {
+      background: #000;
+      color: #fff;
+    }
+
+    .goals-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .goals-list h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .goal-item {
+      background: #f5f5f5;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .goal-item.completed {
+      background: #fff;
+      border-left: 3px solid #000;
+    }
+
+    .goal-item.completed p {
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    .goal-priority {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid #000;
+    }
+
+    .goal-actions {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .goal-actions button {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #000;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+    }
+
+    .goal-actions button:hover {
+      background: #000;
+      color: #fff;
+    }
+
+    .goal-actions .delete-btn {
+      background: #000;
+      color: #fff;
+    }
+
+    /* Calendar Styles */
+    .calendar-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+
+    .calendar {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .calendar-header h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .calendar-nav {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .calendar-nav button {
+      background: #000;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .calendar-nav button:hover {
+      background: #333;
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .weekday {
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0.5rem;
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.3rem;
+    }
+
+    .day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      background: white;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .day:hover {
+      background: #f0f0f0;
+      border-color: #000;
+    }
+
+    .day.empty {
+      background: #f5f5f5;
+      cursor: default;
+    }
+
+    .day.today {
+      background: #000;
+      color: white;
+      border-color: #000;
+    }
+
+    .calendar-events {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+      height: fit-content;
+    }
+
+    .calendar-events h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .event {
+      background: white;
+      padding: 0.8rem;
+      border-left: 2px solid #000;
+      margin-bottom: 0.8rem;
+    }
+
+    .event-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .event-time {
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    .no-events {
+      color: #999;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* Notes Section */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .note-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 1rem;
+    }
+
+    .note-card textarea {
+      width: 100%;
+      height: 150px;
+      border: 1px solid #ddd;
+      padding: 0.75rem;
+      font-family: inherit;
+      resize: none;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Progress Stats */
+    .progress-bar {
+      background: #e0e0e0;
+      height: 8px;
+      margin: 0.5rem 0;
+      border: 1px solid #ddd;
+    }
+
+    .progress-fill {
+      background: #000;
+      height: 100%;
+      transition: width 0.3s;
+    }
+
+    /* Timer Styles */
+    .timer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .timer-card {
+      background: #f5f5f5;
+      padding: 2rem;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    .timer-display {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #000;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .timer-btn {
+      padding: 0.6rem 1.2rem;
+      background: #000;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .timer-btn:hover {
+      background: #333;
+    }
+
+    .timer-btn.stop {
+      background: #d32f2f;
+    }
+
+    .timer-btn.stop:hover {
+      background: #b71c1c;
+    }
+
+    /* Assignment Tracker Styles */
+    .assignment-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .assignment-form {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+    }
+
+    .assignment-form h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .assignment-form input,
+    .assignment-form select,
+    .assignment-form textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #ccc;
+      font-size: 0.9rem;
+    }
+
+    .assignment-form textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .assignment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .assignment-item {
+      background: #f5f5f5;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-left: 3px solid #ffa500;
+    }
+
+    .assignment-item.overdue {
+      border-left-color: #d32f2f;
+      background: #ffebee;
+    }
+
+    .assignment-item.completed {
+      border-left-color: #4caf50;
+      background: #f1f8e9;
+    }
+
+    .assignment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.5rem;
+    }
+
+    .assignment-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .assignment-time {
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 0.25rem;
+    }
+
+    .assignment-deadline {
+      font-size: 0.8rem;
+      color: #d32f2f;
+      font-weight: 600;
+    }
+
+    .assignment-status {
+      font-size: 0.75rem;
+      background: #000;
+      color: white;
+      padding: 0.3rem 0.6rem;
+      border-radius: 3px;
+    }
+
+    /* CGPA Calculator Styles */
+    .calculator-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .calculator-form {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+    }
+
+    .calculator-form h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .subject-input-group {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      align-items: end;
+    }
+
+    .subject-input-group input,
+    .subject-input-group select {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      font-size: 0.85rem;
+    }
+
+    .subject-input-group button {
+      padding: 0.6rem 0.8rem;
+      background: #d32f2f;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .calculator-results {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #ddd;
+      font-weight: 600;
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .subject-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .subject-item {
+      background: white;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-left: 3px solid #000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .subject-info {
+      flex: 1;
+    }
+
+    .subject-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .subject-credits {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    /* Study Analytics Styles */
+    .analytics-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .analytics-card {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    .analytics-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #000;
+      margin: 0.5rem 0;
+    }
+
+    .analytics-label {
+      font-size: 0.85rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Performance Tracker Styles */
+    .performance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .performance-card {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+    }
+
+    .performance-card h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      color: #000;
+      font-weight: 600;
+    }
+
+    /* Settings Styles */
+    .settings-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .settings-form {
+      background: #f5f5f5;
+      padding: 2rem;
+      border: 1px solid #ddd;
+    }
+
+    .settings-form h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      color: #000;
+      border-bottom: 2px solid #fff;
+      padding-bottom: 0.75rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .profile-pic-upload {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-pic-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      border: 3px solid #000;
+      overflow: hidden;
+      font-size: 3rem;
+    }
+
+    .profile-pic-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-wrapper input[type=file] {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .file-label {
+      display: block;
+      padding: 0.75rem;
+      background: #000;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 0.5rem;
+    }
+
+    .file-label:hover {
+      background: #333;
+    }
+
+    .remove-pic-btn {
+      padding: 0.6rem 1.2rem;
+      background: #d32f2f;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .remove-pic-btn:hover {
+      background: #b71c1c;
+    }
+
+    /* Navigation Profile Pic */
+    .nav-profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ccc;
+      margin-left: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      overflow: hidden;
+    }
+
+    .nav-profile-pic:hover {
+      border-color: #fff;
+    }
+
+    .nav-profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .nav-profile-pic span {
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #000;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+    }
+
+    .settings-display {
+      background: white;
+      padding: 2rem;
+      border: 1px solid #ddd;
+    }
+
+    .settings-display h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      color: #000;
+      border-bottom: 2px solid #000;
+      padding-bottom: 0.75rem;
+    }
+
+    .profile-section {
+      margin-bottom: 2rem;
+    }
+
+    .profile-section h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 0.5rem;
+    }
+
+    .profile-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.95rem;
+    }
+
+    .profile-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-label {
+      font-weight: 600;
+      color: #666;
+      min-width: 150px;
+    }
+
+    .profile-value {
+      color: #333;
+      word-break: break-word;
+    }
+
+    .profile-value.empty {
+      color: #999;
+      font-style: italic;
+    }
+
+    /* Footer Enhanced */
+    footer {
+      background: #000;
+      color: white;
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid #333;
+      font-size: 0.85rem;
+    }
+
+    footer .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    footer .footer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    footer .footer-section h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    footer .footer-links {
+      font-size: 0.8rem;
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    footer .footer-links a {
+      color: #ccc;
+      text-decoration: none;
+      margin: 0 1rem;
+      transition: color 0.2s;
+    }
+
+    footer .footer-links a:hover {
+      color: #fff;
+    }
+
+    footer .footer-credits {
+      border-top: 1px solid #333;
+      padding-top: 1.5rem;
+      color: #999;
+      font-size: 0.8rem;
+    }
+
+    footer .footer-credits p {
+      margin: 0.5rem 0;
+    }
+
+    /* Footer */
+    footer {
+      background: #000;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid #333;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        gap: 1rem;
+        font-size: 0.8rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .goals-container {
+        grid-template-columns: 1fr;
+      }
+
+      .calendar-container {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <div class="logo">STUDYFLOW</div>
+      <ul>
+        <li><a onclick="scrollToSection('dashboard')">Dashboard</a></li>
+        <li><a onclick="scrollToSection('timer')">Timer</a></li>
+        <li><a onclick="scrollToSection('assignments')">Assignments</a></li>
+        <li><a onclick="scrollToSection('calculator')">CGPA</a></li>
+        <li><a onclick="scrollToSection('analytics')">Analytics</a></li>
+        <li><a onclick="scrollToSection('tips')">Tips</a></li>
+        <li><a onclick="scrollToSection('goals')">Goals</a></li>
+        <li><a onclick="scrollToSection('calendar')">Calendar</a></li>
+        <li><a onclick="scrollToSection('notes')">Notes</a></li>
+      </ul>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="nav-profile-pic" id="navProfilePic" onclick="openSettings()" title="Open Settings">
+          <span>👤</span>
+        </div>
+        <a class="settings-icon" onclick="openSettings()" title="Settings">⚙️</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>STUDYFLOW</h1>
+      <p>Professional Academic Management Platform</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section">
+      <h2>Dashboard</h2>
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <div class="stat-number">0</div>
+          <div class="stat-label">Active Goals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">0</div>
+          <div class="stat-label">Completed Today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">0%</div>
+          <div class="stat-label">Weekly Progress</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">0h</div>
+          <div class="stat-label">Study Time</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Study Timer Section -->
+    <section id="timer" class="section">
+      <h2>Study Timer</h2>
+      <div class="timer-container">
+        <div class="timer-card">
+          <h3>Study Session Timer</h3>
+          <div class="timer-display" id="timerDisplay">00:25:00</div>
+          <div class="timer-controls">
+            <button class="timer-btn" onclick="startTimer()">Start</button>
+            <button class="timer-btn stop" onclick="stopTimer()">Stop</button>
+            <button class="timer-btn" onclick="resetTimer()">Reset</button>
+          </div>
+          <div style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+            <p>Default: 25 min (Pomodoro)</p>
+          </div>
+        </div>
+        <div class="timer-card">
+          <h3>Custom Timer</h3>
+          <input type="number" id="customMinutes" placeholder="Minutes" min="1" max="120" style="width: 100%; padding: 0.75rem; margin-bottom: 0.5rem; border: 1px solid #ccc; font-size: 0.9rem;">
+          <input type="number" id="customSeconds" placeholder="Seconds" min="0" max="59" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ccc; font-size: 0.9rem;">
+          <button class="timer-btn" onclick="setCustomTimer()" style="width: 100%;">Set Timer</button>
+          <div style="margin-top: 1rem;">
+            <p style="font-size: 0.9rem; color: #666;">Total Study Time: <strong id="totalStudyTime">0h 0m</strong></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Assignment Tracker Section -->
+    <section id="assignments" class="section">
+      <h2>Assignment Tracker</h2>
+      <div class="assignment-container">
+        <div class="assignment-form">
+          <h3>Add Assignment</h3>
+          <input type="text" id="assignmentName" placeholder="Assignment Name">
+          <input type="date" id="assignmentDeadline">
+          <input type="number" id="assignmentTime" placeholder="Estimated Time (hours)" min="0" step="0.5">
+          <select id="assignmentSubject">
+            <option value="">Select Subject</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="English">English</option>
+            <option value="Programming">Programming</option>
+            <option value="History">History</option>
+            <option value="Other">Other</option>
+          </select>
+          <textarea id="assignmentDescription" placeholder="Notes..."></textarea>
+          <button class="btn" onclick="addAssignment()">Add Assignment</button>
+        </div>
+        <div class="assignment-list">
+          <h3>Assignments List</h3>
+          <div id="assignmentsList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CGPA/SGPA Calculator Section -->
+    <section id="calculator" class="section">
+      <h2>CGPA & SGPA Calculator</h2>
+      <div class="calculator-container">
+        <div class="calculator-form">
+          <h3>Add Subject</h3>
+          <div class="subject-input-group">
+            <input type="text" id="subjectName" placeholder="Subject Name">
+            <input type="number" id="subjectCredits" placeholder="Credits" min="1" max="10">
+            <select id="subjectGrade">
+              <option value="A">A (10)</option>
+              <option value="A-">A- (9)</option>
+              <option value="B+">B+ (8)</option>
+              <option value="B">B (7)</option>
+              <option value="B-">B- (6)</option>
+              <option value="C">C (5)</option>
+            </select>
+            <button onclick="addSubject()">Add</button>
+          </div>
+          <div class="subject-list" id="subjectsList" style="margin-top: 1rem;"></div>
+        </div>
+        <div class="calculator-results">
+          <h3>Results</h3>
+          <div class="result-item">
+            <span>SGPA (Current Semester):</span>
+            <span id="sgpaResult" style="font-size: 1.5rem; color: #000;">0.00</span>
+          </div>
+          <div class="result-item">
+            <span>CGPA (Cumulative):</span>
+            <span id="cgpaResult" style="font-size: 1.5rem; color: #000;">0.00</span>
+          </div>
+          <div class="result-item">
+            <span>Total Credits:</span>
+            <span id="totalCredits">0</span>
+          </div>
+          <div class="result-item">
+            <span>Percentage (Approx):</span>
+            <span id="percentage">0%</span>
+          </div>
+          <button class="btn" style="margin-top: 1rem; width: 100%;" onclick="saveCGPA()">Save CGPA Data</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Study Analytics Section -->
+    <section id="analytics" class="section">
+      <h2>Study Analytics</h2>
+      <div class="analytics-container">
+        <div class="analytics-card">
+          <div class="analytics-label">Total Study Time</div>
+          <div class="analytics-number" id="totalStudyAnalytics">0h 0m</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-label">Assignments Completed</div>
+          <div class="analytics-number" id="completedAssignments">0</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-label">Pending Assignments</div>
+          <div class="analytics-number" id="pendingAssignments">0</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-label">Current CGPA</div>
+          <div class="analytics-number" id="analyticsCGPA">0.00</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-label">Goals Completion Rate</div>
+          <div class="analytics-number" id="completionRate">0%</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-label">Average Grade</div>
+          <div class="analytics-number" id="avgGrade">A</div>
+        </div>
+      </div>
+    </section>
+
+     <!-- Study Tips Section -->
+    <section id="tips" class="section">
+      <h2>Study Strategies</h2>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <h3>Pomodoro Technique</h3>
+          <p>25 min focus, 5 min break. Maintain consistency.</p>
+        </div>
+        <div class="tip-card">
+          <h3>Active Recall</h3>
+          <p>Test yourself frequently. Enhanced retention.</p>
+        </div>
+        <div class="tip-card">
+          <h3>Spaced Repetition</h3>
+          <p>Review material at increasing intervals.</p>
+        </div>
+        <div class="tip-card">
+          <h3>Deep Work</h3>
+          <p>Eliminate distractions. Focus on one task.</p>
+        </div>
+        <div class="tip-card">
+          <h3>Cornell Notes</h3>
+          <p>Organized note-taking system for clarity.</p>
+        </div>
+        <div class="tip-card">
+          <h3>Study Groups</h3>
+          <p>Collaborate and discuss complex topics.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Goals Section -->
+    <section id="goals" class="section">
+      <h2>Goals & Progress</h2>
+      <div class="goals-container">
+        <div class="goals-form">
+          <h3>Add Goal</h3>
+          <input type="text" id="goalInput" placeholder="Goal title">
+          <select id="prioritySelect">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+          <button class="btn" onclick="addGoal()">Add Goal</button>
+        </div>
+        <div class="goals-list">
+          <h3>Active Goals</h3>
+          <div id="goalsList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section id="calendar" class="section">
+      <h2>Calendar & Events</h2>
+      <div class="calendar-container">
+        <div class="calendar">
+          <div class="calendar-header">
+            <h3 id="monthYear"></h3>
+            <div class="calendar-nav">
+              <button onclick="prevMonth()">← Prev</button>
+              <button onclick="nextMonth()">Next →</button>
+            </div>
+          </div>
+          <div class="calendar-weekdays">
+            <div class="weekday">Sun</div>
+            <div class="weekday">Mon</div>
+            <div class="weekday">Tue</div>
+            <div class="weekday">Wed</div>
+            <div class="weekday">Thu</div>
+            <div class="weekday">Fri</div>
+            <div class="weekday">Sat</div>
+          </div>
+          <div class="calendar-days" id="calendarDays"></div>
+        </div>
+
+        <div class="calendar-events">
+          <h3>Upcoming</h3>
+          <div id="eventsList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Study Notes Section -->
+    <section id="notes" class="section">
+      <h2>Study Notes</h2>
+      <div class="notes-grid">
+        <div class="note-card">
+          <textarea id="note1" placeholder="Quick notes..."></textarea>
+          <button class="btn btn-secondary" onclick="saveNotes()">Save</button>
+        </div>
+        <div class="note-card">
+          <textarea id="note2" placeholder="Important concepts..."></textarea>
+          <button class="btn btn-secondary" onclick="saveNotes()">Save</button>
+        </div>
+        <div class="note-card">
+          <textarea id="note3" placeholder="Exam review..."></textarea>
+          <button class="btn btn-secondary" onclick="saveNotes()">Save</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="settings-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Settings & Profile</h2>
+        <button class="close-btn" onclick="closeSettings()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-settings-container">
+          <div class="settings-form">
+            <h3>Personal Information</h3>
+
+            <div class="profile-pic-upload">
+              <div class="profile-pic-preview" id="profilePicPreview">👤</div>
+              <div class="file-input-wrapper">
+                <label class="file-label" for="profilePicInput">Choose Profile Picture</label>
+                <input type="file" id="profilePicInput" accept="image/*">
+              </div>
+              <button class="remove-pic-btn" onclick="removeProfilePic()">Remove Picture</button>
+            </div>
+            
+            <div class="form-group">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="your.email@example.com">
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" placeholder="Enter your phone number">
+            </div>
+
+            <div class="form-group">
+              <label for="dob">Date of Birth</label>
+              <input type="date" id="dob">
+            </div>
+
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select id="gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="university">University/School</label>
+              <input type="text" id="university" placeholder="Name of your institution">
+            </div>
+
+            <div class="form-group">
+              <label for="major">Major/Field of Study</label>
+              <input type="text" id="major" placeholder="Your major or field">
+            </div>
+
+            <div class="form-group">
+              <label for="rollNumber">Roll/Student Number</label>
+              <input type="text" id="rollNumber" placeholder="Your roll or student ID">
+            </div>
+
+            <div class="form-group">
+              <label for="semester">Current Semester</label>
+              <select id="semester">
+                <option value="">Select Semester</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea id="address" placeholder="Your residential address"></textarea>
+            </div>
+
+            <button class="btn" onclick="saveUserProfile()" style="width: 100%;">Save Profile</button>
+          </div>
+
+          <div class="settings-display">
+            <h3>Profile Summary</h3>
+            
+            <div style="text-align: center; margin-bottom: 2rem;">
+              <div class="profile-pic-preview" style="width: 150px; height: 150px; margin: 0 auto 1rem;" id="displayProfilePic">👤</div>
+            </div>
+            
+            <div class="profile-section">
+              <h4>Basic Information</h4>
+              <div class="profile-item">
+                <span class="profile-label">Name:</span>
+                <span class="profile-value" id="displayName">Not provided</span>
+              </div>
+              <div class="profile-item">
+                <span class="profile-label">Email:</span>
+                <span class="profile-value" id="displayEmail">Not provided</span>
+              </div>
+              <div class="profile-item">
+                <span class="profile-label">Phone:</span>
+                <span class="profile-value" id="displayPhone">Not provided</span>
+              </div>
+              <div class="profile-item">
+                <span class="profile-label">Date of Birth:</span>
+                <span class="profile-value" id="displayDOB">Not provided</span>
+              </div>
+              <div class="profile-item">
+                <span class="profile-label">Gender:</span>
+                <span class="profile-value" id="displayGender">Not provided</span>
+              </div>
+            </div>
+
+            <div class="profile-section">
+              <h4>Academic Information</h4>
+              <div class="profile-item">
+                <span class="profile-label">University:</span>
+                <span class="profile-value" id="displayUniversity">Not provided</span>
+              </div>
+              <div class="profile-item">
+                <span class="profile-label">Major:</span>
+                <span class="profile-value" id="displayMajor">Not provided</span>
+              </div>
+              <div class="profile-item">
+                <span class="profile-label">Roll Number:</span>
+                <span class="profile-value" id="displayRollNumber">Not provided</span>
+              </div>
+              <div class="profile-item">
+                <span class="profile-label">Current Semester:</span>
+                <span class="profile-value" id="displaySemester">Not provided</span>
+              </div>
+            </div>
+
+            <div class="profile-section">
+              <h4>Additional Information</h4>
+              <div class="profile-item">
+                <span class="profile-label">Address:</span>
+                <span class="profile-value" id="displayAddress">Not provided</span>
+              </div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="clearProfile()" style="width: 100%; margin-top: 1rem;">Clear Information</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>StudyFlow - Academic Management Platform</h4>
+        <p>Your complete companion for academic success and personal growth.</p>
+      </div>
+
+      <div class="footer-section">
+        <h4>Features</h4>
+        <div class="footer-links">
+          <a href="#">Study Timer</a>
+          <a href="#">Assignment Tracker</a>
+          <a href="#">CGPA Calculator</a>
+          <a href="#">Goal Manager</a>
+        </div>
+      </div>
+
+      <div class="footer-section footer-credits">
+        <p>© 2026 StudyFlow. All Rights Reserved.</p>
+        <p>Professional Academic Platform for Students</p>
+        <p style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #333;">
+          <strong>Developed with the help of GitHub Copilot</strong> - An AI-powered coding assistant by Microsoft.<br>
+          This platform combines powerful academic tools with modern web technology to enhance your learning experience.
+        </p>
+        <p style="margin-top: 0.8rem; font-size: 0.75rem;">
+          Built using HTML, CSS, and JavaScript | Data stored securely in your browser
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    let currentDate = new Date();
+    let goals = JSON.parse(localStorage.getItem('goals')) || [];
+    let events = JSON.parse(localStorage.getItem('events')) || {};
+    let assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+    let subjects = JSON.parse(localStorage.getItem('subjects')) || [];
+    let timerInterval = null;
+    let totalSeconds = 25 * 60;
+    let elapsedSeconds = 0;
+    let totalStudySeconds = JSON.parse(localStorage.getItem('totalStudySeconds')) || 0;
+
+    // Grade points mapping
+    const gradePoints = {
+      'A': 10,
+      'A-': 9,
+      'B+': 8,
+      'B': 7,
+      'B-': 6,
+      'C': 5
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCalendar();
+      renderGoals();
+      initializeEvents();
+      updateEventsList();
+      loadNotes();
+      renderAssignments();
+      renderSubjects();
+      updateAnalytics();
+      updateTimerDisplay();
+      loadUserProfile();
+      displayProfilePicture();
+    });
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ===== SETTINGS MODAL FUNCTIONS =====
+    function openSettings() {
+      document.getElementById('settingsModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', (event) => {
+      const modal = document.getElementById('settingsModal');
+      if (event.target === modal) {
+        closeSettings();
+      }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeSettings();
+      }
+    });
+
+    // Profile Picture Upload Handler
+    document.getElementById('profilePicInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const base64Image = event.target.result;
+          localStorage.setItem('profilePicture', base64Image);
+          displayProfilePicture();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function displayProfilePicture() {
+      const profilePic = localStorage.getItem('profilePicture');
+      const previewElement = document.getElementById('profilePicPreview');
+      const displayElement = document.getElementById('displayProfilePic');
+      const navElement = document.getElementById('navProfilePic');
+
+      if (profilePic) {
+        previewElement.innerHTML = `<img src="${profilePic}" alt="Profile">`;
+        displayElement.innerHTML = `<img src="${profilePic}" alt="Profile">`;
+        navElement.innerHTML = `<img src="${profilePic}" alt="Profile">`;
+      } else {
+        previewElement.innerHTML = '👤';
+        displayElement.innerHTML = '👤';
+        navElement.innerHTML = '<span>👤</span>';
+      }
+    }
+
+    function removeProfilePic() {
+      if (confirm('Are you sure you want to remove your profile picture?')) {
+        localStorage.removeItem('profilePicture');
+        document.getElementById('profilePicInput').value = '';
+        displayProfilePicture();
+        alert('Profile picture removed!');
+      }
+    }
+
+    // ===== TIMER FUNCTIONS =====
+    function updateTimerDisplay() {
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      document.getElementById('timerDisplay').textContent =
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      if (timerInterval) return;
+      timerInterval = setInterval(() => {
+        if (totalSeconds > 0) {
+          totalSeconds--;
+          elapsedSeconds++;
+          totalStudySeconds++;
+          updateTimerDisplay();
+          localStorage.setItem('totalStudySeconds', JSON.stringify(totalStudySeconds));
+          updateTotalStudyTime();
+        } else {
+          stopTimer();
+          alert('Study session completed! Take a break.');
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function resetTimer() {
+      stopTimer();
+      totalSeconds = 25 * 60;
+      elapsedSeconds = 0;
+      updateTimerDisplay();
+    }
+
+    function setCustomTimer() {
+      const minutes = parseInt(document.getElementById('customMinutes').value) || 0;
+      const seconds = parseInt(document.getElementById('customSeconds').value) || 0;
+      if (minutes === 0 && seconds === 0) {
+        alert('Please enter a valid time');
+        return;
+      }
+      stopTimer();
+      totalSeconds = minutes * 60 + seconds;
+      elapsedSeconds = 0;
+      updateTimerDisplay();
+      document.getElementById('customMinutes').value = '';
+      document.getElementById('customSeconds').value = '';
+    }
+
+    function updateTotalStudyTime() {
+      const hours = Math.floor(totalStudySeconds / 3600);
+      const minutes = Math.floor((totalStudySeconds % 3600) / 60);
+      document.getElementById('totalStudyTime').textContent = `${hours}h ${minutes}m`;
+    }
+
+    // ===== ASSIGNMENT TRACKER FUNCTIONS =====
+    function addAssignment() {
+      const name = document.getElementById('assignmentName').value.trim();
+      const deadline = document.getElementById('assignmentDeadline').value;
+      const estimatedTime = parseFloat(document.getElementById('assignmentTime').value) || 0;
+      const subject = document.getElementById('assignmentSubject').value;
+      const description = document.getElementById('assignmentDescription').value.trim();
+
+      if (!name || !deadline || !subject) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      assignments.push({
+        id: Date.now(),
+        name: name,
+        deadline: deadline,
+        estimatedTime: estimatedTime,
+        subject: subject,
+        description: description,
+        completed: false,
+        completionTime: null,
+        createdDate: new Date().toISOString()
+      });
+
+      localStorage.setItem('assignments', JSON.stringify(assignments));
+      document.getElementById('assignmentName').value = '';
+      document.getElementById('assignmentDeadline').value = '';
+      document.getElementById('assignmentTime').value = '';
+      document.getElementById('assignmentSubject').value = '';
+      document.getElementById('assignmentDescription').value = '';
+      renderAssignments();
+      updateAnalytics();
+    }
+
+    function toggleAssignment(id) {
+      assignments = assignments.map(a => {
+        if (a.id === id) {
+          return {
+            ...a,
+            completed: !a.completed,
+            completionTime: !a.completed ? new Date().toISOString() : null
+          };
+        }
+        return a;
+      });
+      localStorage.setItem('assignments', JSON.stringify(assignments));
+      renderAssignments();
+      updateAnalytics();
+    }
+
+    function deleteAssignment(id) {
+      assignments = assignments.filter(a => a.id !== id);
+      localStorage.setItem('assignments', JSON.stringify(assignments));
+      renderAssignments();
+      updateAnalytics();
+    }
+
+    function renderAssignments() {
+      const assignmentsList = document.getElementById('assignmentsList');
+      if (assignments.length === 0) {
+        assignmentsList.innerHTML = '<div style="color: #999; padding: 1rem;">No assignments</div>';
+        return;
+      }
+
+      const now = new Date();
+      assignmentsList.innerHTML = assignments
+        .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+        .map(assignment => {
+          const deadline = new Date(assignment.deadline);
+          const isOverdue = deadline < now && !assignment.completed;
+          const daysLeft = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+          const timeSpent = assignment.completionTime
+            ? Math.round((new Date(assignment.completionTime) - new Date(assignment.createdDate)) / (1000 * 60 * 60) * 10) / 10
+            : '—';
+
+          return `
+            <div class="assignment-item ${isOverdue ? 'overdue' : ''} ${assignment.completed ? 'completed' : ''}">
+              <div class="assignment-header">
+                <div>
+                  <div class="assignment-title">${assignment.name}</div>
+                  <div class="assignment-time">Subject: ${assignment.subject}</div>
+                  <div class="assignment-time">Due: ${deadline.toDateString()} (${isOverdue && !assignment.completed ? 'OVERDUE' : daysLeft + ' days left'})</div>
+                  <div class="assignment-time">Est. Time: ${assignment.estimatedTime}h | Time Spent: ${timeSpent}h</div>
+                </div>
+                <span class="assignment-status">${assignment.completed ? '✓ DONE' : 'PENDING'}</span>
+              </div>
+              <div class="goal-actions" style="margin-top: 0.5rem;">
+                <button onclick="toggleAssignment(${assignment.id})">${assignment.completed ? 'Undo' : 'Complete'}</button>
+                <button class="delete-btn" onclick="deleteAssignment(${assignment.id})">Delete</button>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    // ===== CGPA/SGPA CALCULATOR FUNCTIONS =====
+    function addSubject() {
+      const name = document.getElementById('subjectName').value.trim();
+      const credits = parseInt(document.getElementById('subjectCredits').value) || 0;
+      const grade = document.getElementById('subjectGrade').value;
+
+      if (!name || credits === 0) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      subjects.push({
+        id: Date.now(),
+        name: name,
+        credits: credits,
+        grade: grade,
+        gradePoint: gradePoints[grade]
+      });
+
+      localStorage.setItem('subjects', JSON.stringify(subjects));
+      document.getElementById('subjectName').value = '';
+      document.getElementById('subjectCredits').value = '';
+      document.getElementById('subjectGrade').value = 'A';
+      renderSubjects();
+      calculateCGPA();
+    }
+
+    function removeSubject(id) {
+      subjects = subjects.filter(s => s.id !== id);
+      localStorage.setItem('subjects', JSON.stringify(subjects));
+      renderSubjects();
+      calculateCGPA();
+    }
+
+    function renderSubjects() {
+      const subjectsList = document.getElementById('subjectsList');
+      if (subjects.length === 0) {
+        subjectsList.innerHTML = '<div style="color: #999; padding: 1rem; text-align: center;">No subjects added</div>';
+        return;
+      }
+
+      subjectsList.innerHTML = subjects
+        .map(subject => `
+          <div class="subject-item">
+            <div class="subject-info">
+              <div class="subject-name">${subject.name}</div>
+              <div class="subject-credits">Credits: ${subject.credits} | Grade: ${subject.grade} (${subject.gradePoint})</div>
+            </div>
+            <button onclick="removeSubject(${subject.id})" style="padding: 0.4rem 0.8rem; background: #d32f2f; color: white; border: none; cursor: pointer; font-size: 0.75rem;">Remove</button>
+          </div>
+        `)
+        .join('');
+    }
+
+    function calculateCGPA() {
+      if (subjects.length === 0) {
+        document.getElementById('sgpaResult').textContent = '0.00';
+        document.getElementById('cgpaResult').textContent = '0.00';
+        document.getElementById('totalCredits').textContent = '0';
+        document.getElementById('percentage').textContent = '0%';
+        return;
+      }
+
+      let totalGradePoints = 0;
+      let totalCredits = 0;
+
+      subjects.forEach(subject => {
+        totalGradePoints += subject.gradePoint * subject.credits;
+        totalCredits += subject.credits;
+      });
+
+      const sgpa = totalGradePoints / totalCredits;
+      const cgpa = sgpa; // In real scenario, this would be cumulative from previous semesters
+      const percentage = (sgpa / 10) * 100;
+
+      document.getElementById('sgpaResult').textContent = sgpa.toFixed(2);
+      document.getElementById('cgpaResult').textContent = cgpa.toFixed(2);
+      document.getElementById('totalCredits').textContent = totalCredits;
+      document.getElementById('percentage').textContent = percentage.toFixed(1) + '%';
+    }
+
+    function saveCGPA() {
+      localStorage.setItem('subjects', JSON.stringify(subjects));
+      alert('CGPA data saved successfully!');
+    }
+
+    // ===== USER PROFILE FUNCTIONS =====
+    function saveUserProfile() {
+      const userProfile = {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        dob: document.getElementById('dob').value,
+        gender: document.getElementById('gender').value,
+        university: document.getElementById('university').value,
+        major: document.getElementById('major').value,
+        rollNumber: document.getElementById('rollNumber').value,
+        semester: document.getElementById('semester').value,
+        address: document.getElementById('address').value
+      };
+
+      localStorage.setItem('userProfile', JSON.stringify(userProfile));
+      displayUserProfile();
+      alert('Profile saved successfully!');
+    }
+
+    function loadUserProfile() {
+      const userProfile = JSON.parse(localStorage.getItem('userProfile')) || {};
+      
+      document.getElementById('fullName').value = userProfile.fullName || '';
+      document.getElementById('email').value = userProfile.email || '';
+      document.getElementById('phone').value = userProfile.phone || '';
+      document.getElementById('dob').value = userProfile.dob || '';
+      document.getElementById('gender').value = userProfile.gender || '';
+      document.getElementById('university').value = userProfile.university || '';
+      document.getElementById('major').value = userProfile.major || '';
+      document.getElementById('rollNumber').value = userProfile.rollNumber || '';
+      document.getElementById('semester').value = userProfile.semester || '';
+      document.getElementById('address').value = userProfile.address || '';
+
+      displayUserProfile();
+    }
+
+    function displayUserProfile() {
+      const userProfile = JSON.parse(localStorage.getItem('userProfile')) || {};
+
+      const displayField = (id, value) => {
+        const element = document.getElementById(id);
+        element.textContent = value || 'Not provided';
+        if (!value) element.classList.add('empty');
+        else element.classList.remove('empty');
+      };
+
+      displayField('displayName', userProfile.fullName);
+      displayField('displayEmail', userProfile.email);
+      displayField('displayPhone', userProfile.phone);
+      displayField('displayDOB', userProfile.dob ? new Date(userProfile.dob).toDateString() : '');
+      displayField('displayGender', userProfile.gender);
+      displayField('displayUniversity', userProfile.university);
+      displayField('displayMajor', userProfile.major);
+      displayField('displayRollNumber', userProfile.rollNumber);
+      displayField('displaySemester', userProfile.semester ? 'Semester ' + userProfile.semester : '');
+      displayField('displayAddress', userProfile.address);
+    }
+
+    function clearProfile() {
+      if (confirm('Are you sure you want to clear all profile information?')) {
+        localStorage.removeItem('userProfile');
+        document.getElementById('fullName').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('dob').value = '';
+        document.getElementById('gender').value = '';
+        document.getElementById('university').value = '';
+        document.getElementById('major').value = '';
+        document.getElementById('rollNumber').value = '';
+        document.getElementById('semester').value = '';
+        document.getElementById('address').value = '';
+        displayUserProfile();
+        alert('Profile information cleared!');
+      }
+    }
+
+    // ===== ANALYTICS FUNCTIONS =====
+    function updateAnalytics() {
+      // Update study time
+      updateTotalStudyTime();
+      const hoursAnalytics = Math.floor(totalStudySeconds / 3600);
+      const minutesAnalytics = Math.floor((totalStudySeconds % 3600) / 60);
+      document.getElementById('totalStudyAnalytics').textContent = `${hoursAnalytics}h ${minutesAnalytics}m`;
+
+      // Update assignment stats
+      const completed = assignments.filter(a => a.completed).length;
+      const pending = assignments.filter(a => !a.completed).length;
+      document.getElementById('completedAssignments').textContent = completed;
+      document.getElementById('pendingAssignments').textContent = pending;
+
+      // Update goals completion rate
+      const completedGoals = goals.filter(g => g.completed).length;
+      const completionRate = goals.length > 0 ? Math.round((completedGoals / goals.length) * 100) : 0;
+      document.getElementById('completionRate').textContent = completionRate + '%';
+
+      // Update CGPA
+      if (subjects.length > 0) {
+        let totalGradePoints = 0;
+        let totalCredits = 0;
+        subjects.forEach(subject => {
+          totalGradePoints += subject.gradePoint * subject.credits;
+          totalCredits += subject.credits;
+        });
+        const avgCGPA = (totalGradePoints / totalCredits).toFixed(2);
+        document.getElementById('analyticsCGPA').textContent = avgCGPA;
+
+        // Update average grade
+        const avgGradePoint = totalGradePoints / totalCredits;
+        let avgGrade = 'A';
+        if (avgGradePoint < 9) avgGrade = 'A-';
+        if (avgGradePoint < 8) avgGrade = 'B+';
+        if (avgGradePoint < 7) avgGrade = 'B';
+        if (avgGradePoint < 6) avgGrade = 'B-';
+        if (avgGradePoint < 5) avgGrade = 'C';
+        document.getElementById('avgGrade').textContent = avgGrade;
+      }
+    }
+
+    // Calendar Functions
+    function renderCalendar() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      document.getElementById('monthYear').textContent = 
+        currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const calendarDays = document.getElementById('calendarDays');
+      calendarDays.innerHTML = '';
+
+      for (let i = 0; i < firstDay; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'day empty';
+        calendarDays.appendChild(emptyDay);
+      }
+
+      const today = new Date();
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'day';
+        dayEl.textContent = day;
+
+        if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+          dayEl.classList.add('today');
+        }
+
+        dayEl.addEventListener('click', () => selectDate(day, month, year));
+        calendarDays.appendChild(dayEl);
+      }
+    }
+
+    function nextMonth() {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      renderCalendar();
+    }
+
+    function prevMonth() {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      renderCalendar();
+    }
+
+    function selectDate(day, month, year) {
+      document.getElementById('eventsList').innerHTML = '';
+      updateEventsList();
+    }
+
+    function initializeEvents() {
+      const today = new Date();
+      const dateKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+      if (!events[dateKey]) {
+        events[dateKey] = [
+          { title: 'Mathematics Lecture', time: '10:00 AM' },
+          { title: 'Submit Assignment', time: '5:00 PM' }
+        ];
+        localStorage.setItem('events', JSON.stringify(events));
+      }
+    }
+
+    function updateEventsList() {
+      const eventsList = document.getElementById('eventsList');
+      let upcomingEvents = [];
+      for (const dateKey in events) {
+        upcomingEvents = upcomingEvents.concat(events[dateKey]);
+      }
+
+      if (upcomingEvents.length === 0) {
+        eventsList.innerHTML = '<div class="no-events">No events</div>';
+      } else {
+        eventsList.innerHTML = upcomingEvents
+          .slice(0, 5)
+          .map(event => `
+            <div class="event">
+              <div class="event-title">${event.title}</div>
+              <div class="event-time">${event.time || 'All day'}</div>
+            </div>
+          `)
+          .join('');
+      }
+    }
+
+    // Goals Functions
+    function addGoal() {
+      const input = document.getElementById('goalInput');
+      const priority = document.getElementById('prioritySelect').value;
+
+      if (!input.value.trim()) return;
+
+      goals.push({
+        id: Date.now(),
+        text: input.value,
+        priority: priority,
+        completed: false
+      });
+
+      localStorage.setItem('goals', JSON.stringify(goals));
+      input.value = '';
+      renderGoals();
+      updateDashboard();
+      updateAnalytics();
+    }
+
+    function toggleGoal(id) {
+      goals = goals.map(g => g.id === id ? { ...g, completed: !g.completed } : g);
+      localStorage.setItem('goals', JSON.stringify(goals));
+      renderGoals();
+      updateDashboard();
+      updateAnalytics();
+    }
+
+    function deleteGoal(id) {
+      goals = goals.filter(g => g.id !== id);
+      localStorage.setItem('goals', JSON.stringify(goals));
+      renderGoals();
+      updateDashboard();
+      updateAnalytics();
+    }
+
+    function renderGoals() {
+      const goalsList = document.getElementById('goalsList');
+      if (goals.length === 0) {
+        goalsList.innerHTML = '<div style="color: #999; padding: 1rem;">No goals yet</div>';
+        return;
+      }
+
+      goalsList.innerHTML = goals
+        .sort((a, b) => ({ high: 0, medium: 1, low: 2 }[a.priority] - { high: 0, medium: 1, low: 2 }[b.priority]))
+        .map(goal => `
+          <div class="goal-item ${goal.completed ? 'completed' : ''}">
+            <span class="goal-priority">${goal.priority.toUpperCase()}</span>
+            <p>${goal.text}</p>
+            <div class="goal-actions">
+              <button onclick="toggleGoal(${goal.id})">${goal.completed ? '✓' : 'Done'}</button>
+              <button class="delete-btn" onclick="deleteGoal(${goal.id})">×</button>
+            </div>
+          </div>
+        `)
+        .join('');
+    }
+
+    function updateDashboard() {
+      const activeGoals = goals.filter(g => !g.completed).length;
+      const completedToday = goals.filter(g => g.completed).length;
+      const progress = goals.length > 0 ? Math.round((completedToday / goals.length) * 100) : 0;
+
+      document.querySelectorAll('.stat-number')[0].textContent = activeGoals;
+      document.querySelectorAll('.stat-number')[1].textContent = completedToday;
+      document.querySelectorAll('.stat-number')[2].textContent = progress + '%';
+    }
+
+    function saveNotes() {
+      localStorage.setItem('note1', document.getElementById('note1').value);
+      localStorage.setItem('note2', document.getElementById('note2').value);
+      localStorage.setItem('note3', document.getElementById('note3').value);
+      alert('Notes saved!');
+    }
+
+    function loadNotes() {
+      document.getElementById('note1').value = localStorage.getItem('note1') || '';
+      document.getElementById('note2').value = localStorage.getItem('note2') || '';
+      document.getElementById('note3').value = localStorage.getItem('note3') || '';
+    }
+
+    document.addEventListener('keypress', (e) => {
+      if (e.target.id === 'goalInput' && e.key === 'Enter') addGoal();
+    });
+
+    updateDashboard();
+    updateAnalytics();
+  </script>
+</body>
+</html>
